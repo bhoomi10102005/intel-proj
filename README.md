@@ -66,6 +66,7 @@ project/
 ├── requirements.txt       # Project dependencies
 ├── train_model.py         # Model training script
 ├── report.md             # Project documentation
+├── README.md             # Project overview and documentation
 ├── data/                 # Data directory
 │   ├── train.csv         # Labeled training data
 │   ├── experiment_*.csv  # High-resolution sensor data
@@ -77,7 +78,8 @@ project/
     ├── data_loader.py    # Data loading utilities
     ├── feature_engineering.py # Feature processing
     ├── model.py          # ML model functions
-    └── utils.py          # Utility functions
+    ├── utils.py          # Utility functions
+    └── visualizer.py     # Sensor data visualization module
 ```
 
 ---
@@ -225,6 +227,38 @@ The project was implemented through systematic phases:
 - Box plots for feature distributions
 - Scatter plots for feature relationships
 
+#### 5.2.4 Sensor Data Visualizer (📈 Sensor Data Visualizer)
+**Purpose**: Interactive visual exploration of raw sensor data
+
+**Components**:
+- Multi-tab visualization interface
+- Interactive chart selection
+- Real-time data filtering
+- Pattern discovery tools
+- Statistical analysis dashboard
+
+**Features**:
+- **Distribution Analysis**: Box plots, histograms, outlier detection
+- **Relationship Analysis**: Scatter plots, line plots, correlation heatmaps
+- **Pattern Discovery**: Radar charts, multi-feature comparisons, worn vs unworn patterns
+- **Statistical Summary**: Comprehensive statistics, missing data analysis
+
+**What it does**:
+- Show bar, line, scatter plots for feedrate, clamp_pressure, material, etc.
+- Compare worn vs unworn visually through color-coded charts
+- Help users identify patterns in worn tool cases
+- Provide interactive exploration of all sensor parameters
+- Enable outlier detection and statistical analysis
+
+**Visualization Types**:
+- **Box Plots**: Compare feature distributions across tool conditions
+- **Histograms**: Show data distribution patterns
+- **Scatter Plots**: Reveal relationships between features
+- **Line Plots**: Display trends and time series patterns
+- **Correlation Heatmaps**: Identify feature correlations
+- **Radar Charts**: Compare patterns between worn and unworn tools
+- **Bar Charts**: Analyze categorical data distributions
+
 ### 5.3 UI Enhancement Features
 
 **Custom CSS Styling**:
@@ -302,6 +336,19 @@ The project was implemented through systematic phases:
 - **Interactive Elements**: Plotly-powered visualizations
 - **Real-time Updates**: Dynamic chart generation
 - **Export Options**: Chart download capabilities
+- **Advanced Visualizer**: Dedicated sensor data exploration module
+  - Distribution analysis with box plots and histograms
+  - Relationship analysis with scatter and line plots
+  - Pattern discovery through radar charts and multi-feature comparisons
+  - Comprehensive statistical summaries and outlier detection
+
+#### 7.1.4 Sensor Data Explorer
+- **Interactive Charts**: Multiple chart types (bar, line, scatter, box, radar)
+- **Comparative Analysis**: Worn vs unworn tool visualizations
+- **Pattern Recognition**: Identify trends and anomalies in sensor data
+- **Feature Correlation**: Heatmaps and correlation analysis
+- **Statistical Insights**: Descriptive statistics and outlier detection
+- **Time Series Analysis**: Temporal pattern exploration for experiment data
 
 #### 7.1.4 Analysis Tools
 - **Descriptive Statistics**: Mean, median, distribution analysis
@@ -626,19 +673,25 @@ def train_model(X, y):      # Training pipeline
 - **Automated Preprocessing**: Smart feature selection
 - **Data Augmentation**: Synthetic data generation
 
+#### 12.1.3 Visualization Enhancements
+- **3D Visualizations**: Multi-dimensional sensor data analysis
+- **Animated Charts**: Time-based progression visualization
+- **Custom Dashboard**: User-configurable visualization layouts
+- **Export Features**: Advanced chart and data export options
+
 ### 12.2 User Experience
 
 #### 12.2.1 Interface Enhancements
-- **Advanced Filtering**: Complex data queries
+- **Advanced Filtering**: Complex data queries and filtering
 - **Custom Dashboards**: User-configurable views
-- **Export Features**: Report generation
+- **Report Generation**: Automated analysis reports
 - **Mobile Optimization**: Touch-friendly interface
 
 #### 12.2.2 Visualization Improvements
-- **3D Visualizations**: Multi-dimensional analysis
-- **Time Series Plots**: Temporal pattern analysis
-- **Heat Maps**: Correlation visualization
-- **Interactive Filtering**: Dynamic chart updates
+- **Interactive Filtering**: Dynamic chart updates based on selections
+- **Drill-down Analysis**: Hierarchical data exploration
+- **Comparative Views**: Side-by-side dataset comparisons
+- **Real-time Updates**: Live data visualization capabilities
 
 ### 12.3 System Architecture
 
@@ -656,6 +709,47 @@ def train_model(X, y):      # Training pipeline
 
 ---
 
+## Recent Updates - Version 1.1
+
+### New Feature: Sensor Data Visualizer (📈)
+
+The latest update introduces a comprehensive **Sensor Data Visualizer** module that significantly enhances the platform's data exploration capabilities:
+
+#### Key Features Added:
+1. **Distribution Analysis**
+   - Interactive box plots and histograms
+   - Worn vs unworn tool comparisons
+   - Statistical summaries and outlier detection
+
+2. **Relationship Analysis**
+   - Scatter plots for feature correlations
+   - Line plots for trend analysis
+   - Correlation heatmaps for feature relationships
+
+3. **Pattern Discovery**
+   - Radar charts comparing worn vs unworn patterns
+   - Multi-feature comparison visualizations
+   - Time series analysis for experiment data
+
+4. **Statistical Dashboard**
+   - Comprehensive statistical summaries
+   - Missing data analysis
+   - Data quality assessments
+
+#### Technical Implementation:
+- **New Module**: `src/visualizer.py` - Dedicated visualization class
+- **Enhanced UI**: Additional navigation tab for sensor data exploration
+- **Interactive Charts**: Full Plotly integration with hover details and zoom
+- **Smart Feature Detection**: Automatic identification of numeric vs categorical features
+
+#### Business Value:
+- **Pattern Recognition**: Easier identification of wear indicators
+- **Data Quality**: Comprehensive data validation and outlier detection
+- **Decision Support**: Visual insights for maintenance scheduling
+- **Training Tool**: Educational interface for understanding sensor relationships
+
+---
+
 ## Conclusion
 
 The Machine Sensor Analytics Dashboard successfully demonstrates the integration of machine learning, data visualization, and user interface design to create a practical tool for predictive maintenance in manufacturing environments. The project showcases modern web application development using Python's ML ecosystem while providing actionable insights for operational decision-making.
@@ -664,6 +758,6 @@ The implementation provides a solid foundation for industrial IoT applications a
 
 ---
 
-**Project Status**: Complete - Phase 1
+**Project Status**: Complete - Phase 1.1
 **Last Updated**: August 4, 2025
-**Version**: 1.0.0
+**Version**: 1.1.0 - Added Sensor Data Visualizer
