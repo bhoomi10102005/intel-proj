@@ -16,37 +16,489 @@ st.set_page_config(
     initial_sidebar_state="expanded"
 )
 
-# Custom CSS for better styling
+# Dynamic CSS for better styling that adapts to theme
 st.markdown("""
 <style>
+    /* Theme-adaptive variables */
+    :root {
+        --primary-color: #1f77b4;
+        --success-color: #28a745;
+        --warning-color: #ffc107;
+        --danger-color: #dc3545;
+        --info-color: #17a2b8;
+    }
+
+    /* Dark theme styles */
+    @media (prefers-color-scheme: dark) {
+        :root {
+            --bg-primary: #0e1117;
+            --bg-secondary: #262730;
+            --bg-tertiary: #1a1d29;
+            --text-primary: #fafafa;
+            --text-secondary: #c9c9c9;
+            --border-color: #404040;
+            --shadow-color: rgba(0, 0, 0, 0.3);
+            --card-bg: #1e1e1e;
+            --hover-bg: #2a2a2a;
+        }
+        
+        .main-header {
+            color: #64b5f6 !important;
+            text-shadow: 0 0 10px rgba(100, 181, 246, 0.3);
+        }
+        
+        .metric-card {
+            background-color: var(--bg-secondary) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+            box-shadow: 0 4px 12px var(--shadow-color) !important;
+        }
+        
+        .prediction-success {
+            background-color: rgba(40, 167, 69, 0.2) !important;
+            color: #4caf50 !important;
+            border-left-color: #4caf50 !important;
+            border: 1px solid rgba(76, 175, 80, 0.3) !important;
+        }
+        
+        .prediction-warning {
+            background-color: rgba(255, 193, 7, 0.2) !important;
+            color: #ffeb3b !important;
+            border-left-color: #ffeb3b !important;
+            border: 1px solid rgba(255, 235, 59, 0.3) !important;
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+        
+        .feature-card {
+            border: 1px solid var(--border-color) !important;
+            box-shadow: 0 4px 20px var(--shadow-color) !important;
+        }
+        
+        .capability-card-green {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.2) 0%, rgba(72, 187, 120, 0.2) 100%) !important;
+            border-left-color: #48bb78 !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .capability-card-blue {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.2) 0%, rgba(100, 181, 246, 0.2) 100%) !important;
+            border-left-color: #64b5f6 !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .workflow-card {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+    }
+
+    /* Light theme styles */
+    @media (prefers-color-scheme: light) {
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-bg: #ffffff;
+            --hover-bg: #f8f9fa;
+        }
+        
+        .main-header {
+            color: #1f77b4 !important;
+            text-shadow: 0 2px 4px rgba(31, 119, 180, 0.1);
+        }
+        
+        .metric-card {
+            background-color: #f0f2f6 !important;
+            color: var(--text-primary) !important;
+            box-shadow: 0 2px 8px var(--shadow-color) !important;
+        }
+        
+        .prediction-success {
+            background-color: #d4edda !important;
+            color: #155724 !important;
+        }
+        
+        .prediction-warning {
+            background-color: #fff3cd !important;
+            color: #856404 !important;
+        }
+        
+        .welcome-section {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .capability-card-green {
+            background-color: #e8f5e8 !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .capability-card-blue {
+            background-color: #e3f2fd !important;
+            color: var(--text-primary) !important;
+        }
+    }
+
+    /* Common styles */
     .main-header {
         font-size: 3rem;
         font-weight: bold;
-        color: #1f77b4;
         text-align: center;
         margin-bottom: 2rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+    
     .metric-card {
-        background-color: #f0f2f6;
         padding: 1rem;
-        border-radius: 10px;
-        border-left: 5px solid #1f77b4;
+        border-radius: 12px;
+        border-left: 4px solid var(--primary-color);
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+    
+    .metric-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px var(--shadow-color) !important;
+    }
+    
     .prediction-success {
-        background-color: #d4edda;
-        color: #155724;
-        padding: 0.5rem;
-        border-radius: 5px;
-        border-left: 5px solid #28a745;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid var(--success-color);
+        font-weight: 500;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
+    
     .prediction-warning {
-        background-color: #fff3cd;
-        color: #856404;
-        padding: 0.5rem;
-        border-radius: 5px;
-        border-left: 5px solid #ffc107;
+        padding: 1rem;
+        border-radius: 8px;
+        border-left: 4px solid var(--warning-color);
+        font-weight: 500;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .welcome-section {
+        text-align: center;
+        padding: 2rem;
+        border-radius: 15px;
+        margin: 2rem 0;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .feature-card {
+        text-align: center;
+        padding: 1.5rem;
+        border-radius: 12px;
+        color: white;
+        margin-bottom: 1rem;
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .feature-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    .capability-card-green, .capability-card-blue {
+        padding: 1.5rem;
+        border-radius: 12px;
+        border-left: 4px solid;
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .capability-card-green:hover, .capability-card-blue:hover {
+        transform: translateX(5px);
+    }
+    
+    .workflow-card {
+        text-align: center;
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin: 0.5rem 0;
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .workflow-card:hover {
+        transform: translateY(-3px);
+    }
+    
+    /* Streamlit specific overrides */
+    .stSelectbox > div > div {
+        border-radius: 8px;
+    }
+    
+    .stButton > button {
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+    
+    .stButton > button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Auto-detect and apply theme based on Streamlit's theme */
+    [data-theme="dark"] .main-header {
+        color: #64b5f6 !important;
+        text-shadow: 0 0 10px rgba(100, 181, 246, 0.3);
+    }
+    
+    [data-theme="light"] .main-header {
+        color: #1f77b4 !important;
+        text-shadow: 0 2px 4px rgba(31, 119, 180, 0.1);
+    }
+    
+    /* Additional theme-adaptive classes */
+    .info-section {
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        transition: all 0.3s ease;
+    }
+    
+    .warning-section {
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--warning-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        transition: all 0.3s ease;
+    }
+    
+    .success-section {
+        padding: 1.5rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        border-left: 4px solid var(--success-color);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        transition: all 0.3s ease;
+    }
+    
+    .dataset-info-card {
+        padding: 1rem;
+        border-radius: 8px;
+        margin: 0.5rem 0;
+        transition: all 0.3s ease;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    /* Dark theme for additional classes */
+    @media (prefers-color-scheme: dark) {
+        .info-section {
+            background: linear-gradient(135deg, rgba(33, 150, 243, 0.15) 0%, rgba(100, 181, 246, 0.15) 100%) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid rgba(100, 181, 246, 0.3) !important;
+        }
+        
+        .warning-section {
+            background: linear-gradient(135deg, rgba(255, 193, 7, 0.15) 0%, rgba(255, 235, 59, 0.15) 100%) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid rgba(255, 235, 59, 0.3) !important;
+        }
+        
+        .success-section {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.15) 0%, rgba(72, 187, 120, 0.15) 100%) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid rgba(72, 187, 120, 0.3) !important;
+        }
+        
+        .dataset-info-card {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-tertiary) 100%) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid var(--border-color) !important;
+        }
+    }
+    
+    /* Light theme for additional classes */
+    @media (prefers-color-scheme: light) {
+        .info-section {
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .warning-section {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffe082 100%) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .success-section {
+            background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        .dataset-info-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+            color: var(--text-primary) !important;
+        }
+    }
+    
+    /* Hover effects */
+    .info-section:hover, .warning-section:hover, .success-section:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px var(--shadow-color) !important;
+    }
+    
+    .dataset-info-card:hover {
+        transform: translateX(3px);
+        box-shadow: 0 4px 15px var(--shadow-color) !important;
+    }
+    
+    /* Ensure text elements have proper contrast */
+    .stMarkdown p, .stMarkdown li, .stMarkdown h1, .stMarkdown h2, .stMarkdown h3, 
+    .stMarkdown h4, .stMarkdown h5, .stMarkdown h6 {
+        color: var(--text-primary) !important;
+    }
+    
+    /* Dark theme text fixes */
+    @media (prefers-color-scheme: dark) {
+        .stMarkdown, .stText, .stSelectbox label, .stSlider label, 
+        .stNumberInput label, .stMultiSelect label, .stCheckbox label {
+            color: var(--text-primary) !important;
+        }
+        
+        .stDataFrame {
+            color: var(--text-primary) !important;
+        }
+        
+        /* Fix for expander content */
+        .streamlit-expanderContent {
+            background-color: var(--bg-secondary) !important;
+            color: var(--text-primary) !important;
+        }
+        
+        /* Fix for info boxes */
+        .stInfo {
+            background-color: rgba(23, 162, 184, 0.2) !important;
+            color: var(--text-primary) !important;
+            border: 1px solid rgba(23, 162, 184, 0.3) !important;
+        }
+        
+        /* Fix for error boxes */
+        .stError {
+            background-color: rgba(220, 53, 69, 0.2) !important;
+            color: #ff6b6b !important;
+            border: 1px solid rgba(220, 53, 69, 0.3) !important;
+        }
+        
+        /* Fix for success boxes */
+        .stSuccess {
+            background-color: rgba(40, 167, 69, 0.2) !important;
+            color: #4caf50 !important;
+            border: 1px solid rgba(40, 167, 69, 0.3) !important;
+        }
+        
+        /* Fix for warning boxes */
+        .stWarning {
+            background-color: rgba(255, 193, 7, 0.2) !important;
+            color: #ffeb3b !important;
+            border: 1px solid rgba(255, 193, 7, 0.3) !important;
+        }
+    }
+    
+    /* Light theme text fixes */
+    @media (prefers-color-scheme: light) {
+        .stMarkdown, .stText, .stSelectbox label, .stSlider label, 
+        .stNumberInput label, .stMultiSelect label, .stCheckbox label {
+            color: var(--text-primary) !important;
+        }
+        
+        .stDataFrame {
+            color: var(--text-primary) !important;
+        }
     }
 </style>
+
+<script>
+// Enhanced theme detection script
+(function() {
+    function detectAndApplyTheme() {
+        // Multiple ways to detect dark mode
+        const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+        
+        // Check Streamlit's background color
+        const bodyBg = getComputedStyle(document.body).backgroundColor;
+        const containerBg = getComputedStyle(document.documentElement).getPropertyValue('--background-color');
+        
+        // Streamlit dark theme detection
+        const isStreamlitDark = bodyBg.includes('rgb(14, 17, 23)') || 
+                                bodyBg.includes('#0e1117') || 
+                                containerBg.includes('rgb(14, 17, 23)') ||
+                                containerBg.includes('#0e1117');
+        
+        // Check for dark theme indicators in the DOM
+        const hasStreamlitDarkClass = document.querySelector('[data-testid="stAppViewContainer"]')?.style.backgroundColor.includes('rgb(14, 17, 23)');
+        
+        const isDark = prefersDark || isStreamlitDark || hasStreamlitDarkClass;
+        
+        // Apply theme
+        document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+        
+        // Force update CSS variables
+        if (isDark) {
+            document.documentElement.style.setProperty('--text-primary', '#fafafa');
+            document.documentElement.style.setProperty('--bg-secondary', '#262730');
+            document.documentElement.style.setProperty('--border-color', '#404040');
+        } else {
+            document.documentElement.style.setProperty('--text-primary', '#212529');
+            document.documentElement.style.setProperty('--bg-secondary', '#f8f9fa');
+            document.documentElement.style.setProperty('--border-color', '#dee2e6');
+        }
+        
+        console.log('Theme detected:', isDark ? 'dark' : 'light');
+    }
+    
+    // Initial detection
+    detectAndApplyTheme();
+    
+    // Listen for theme changes
+    if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addListener(detectAndApplyTheme);
+    }
+    
+    // Monitor DOM changes for Streamlit's dynamic updates
+    const observer = new MutationObserver(function(mutations) {
+        let shouldRecheck = false;
+        mutations.forEach(function(mutation) {
+            if (mutation.type === 'attributes' && 
+                (mutation.attributeName === 'style' || mutation.attributeName === 'class')) {
+                shouldRecheck = true;
+            }
+        });
+        if (shouldRecheck) {
+            setTimeout(detectAndApplyTheme, 100);
+        }
+    });
+    
+    // Start observing
+    observer.observe(document.body, { 
+        attributes: true, 
+        childList: true, 
+        subtree: true,
+        attributeFilter: ['style', 'class']
+    });
+    
+    // Also check on window focus (when user switches themes)
+    window.addEventListener('focus', detectAndApplyTheme);
+    
+    // Periodic check as fallback
+    setInterval(detectAndApplyTheme, 5000);
+})();
+</script>
 """, unsafe_allow_html=True)
 
 # Load available data files
@@ -73,7 +525,7 @@ if page == "🏠 Home":
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
         st.markdown("""
-        <div style="text-align: center; padding: 2rem; background-color: #f8f9fa; border-radius: 15px; margin: 2rem 0;">
+        <div class="welcome-section">
             <h3>Welcome to Advanced Machine Learning Analytics</h3>
             <p>Predict tool wear status using state-of-the-art Random Forest algorithms trained on real sensor data.</p>
         </div>
@@ -86,7 +538,7 @@ if page == "🏠 Home":
     
     with feature_col1:
         st.markdown("""
-        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; margin-bottom: 1rem;">
+        <div class="feature-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
             <h3>🔧</h3>
             <h4>Tool Prediction</h4>
             <p>AI-powered wear detection</p>
@@ -95,7 +547,7 @@ if page == "🏠 Home":
     
     with feature_col2:
         st.markdown("""
-        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 12px; color: white; margin-bottom: 1rem;">
+        <div class="feature-card" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
             <h3>📊</h3>
             <h4>Data Analysis</h4>
             <p>Statistical insights</p>
@@ -104,7 +556,7 @@ if page == "🏠 Home":
     
     with feature_col3:
         st.markdown("""
-        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 12px; color: white; margin-bottom: 1rem;">
+        <div class="feature-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
             <h3>📈</h3>
             <h4>Visualizations</h4>
             <p>Interactive charts</p>
@@ -113,7 +565,7 @@ if page == "🏠 Home":
     
     with feature_col4:
         st.markdown("""
-        <div style="text-align: center; padding: 1.5rem; background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); border-radius: 12px; color: white; margin-bottom: 1rem;">
+        <div class="feature-card" style="background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);">
             <h3>🎯</h3>
             <h4>ML Models</h4>
             <p>Random Forest & more</p>
@@ -127,7 +579,7 @@ if page == "🏠 Home":
     
     with cap_col1:
         st.markdown("""
-        <div style="padding: 1.5rem; background-color: #e8f5e8; border-radius: 10px; border-left: 5px solid #28a745;">
+        <div class="capability-card-green">
             <h4>🔍 Advanced Analytics</h4>
             <ul>
                 <li>Real-time sensor data processing</li>
@@ -140,7 +592,7 @@ if page == "🏠 Home":
     
     with cap_col2:
         st.markdown("""
-        <div style="padding: 1.5rem; background-color: #e3f2fd; border-radius: 10px; border-left: 5px solid #2196f3;">
+        <div class="capability-card-blue">
             <h4>📊 Interactive Dashboards</h4>
             <ul>
                 <li>Multi-chart visualizations</li>
@@ -158,7 +610,7 @@ if page == "🏠 Home":
     
     with workflow_cols[0]:
         st.markdown("""
-        <div style="text-align: center; padding: 1rem; background-color: #fff3e0; border-radius: 10px; margin: 0.5rem 0;">
+        <div class="workflow-card" style="background: linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%);">
             <div style="font-size: 2rem; margin-bottom: 0.5rem;">1️⃣</div>
             <h5>Load Data</h5>
             <p style="font-size: 0.9rem;">Select from training or experiment datasets</p>
@@ -167,7 +619,7 @@ if page == "🏠 Home":
     
     with workflow_cols[1]:
         st.markdown("""
-        <div style="text-align: center; padding: 1rem; background-color: #f3e5f5; border-radius: 10px; margin: 0.5rem 0;">
+        <div class="workflow-card" style="background: linear-gradient(135deg, #f3e5f5 0%, #e1bee7 100%);">
             <div style="font-size: 2rem; margin-bottom: 0.5rem;">2️⃣</div>
             <h5>Analyze</h5>
             <p style="font-size: 0.9rem;">Explore patterns and relationships</p>
@@ -176,7 +628,7 @@ if page == "🏠 Home":
     
     with workflow_cols[2]:
         st.markdown("""
-        <div style="text-align: center; padding: 1rem; background-color: #e8f5e8; border-radius: 10px; margin: 0.5rem 0;">
+        <div class="workflow-card" style="background: linear-gradient(135deg, #e8f5e8 0%, #c8e6c8 100%);">
             <div style="font-size: 2rem; margin-bottom: 0.5rem;">3️⃣</div>
             <h5>Predict</h5>
             <p style="font-size: 0.9rem;">Run ML models for tool wear prediction</p>
@@ -185,7 +637,7 @@ if page == "🏠 Home":
     
     with workflow_cols[3]:
         st.markdown("""
-        <div style="text-align: center; padding: 1rem; background-color: #e1f5fe; border-radius: 10px; margin: 0.5rem 0;">
+        <div class="workflow-card" style="background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);">
             <div style="font-size: 2rem; margin-bottom: 0.5rem;">4️⃣</div>
             <h5>Visualize</h5>
             <p style="font-size: 0.9rem;">View results and insights</p>
@@ -233,7 +685,7 @@ if page == "🏠 Home":
     
     with start_col1:
         st.markdown("""
-        <div style="padding: 1.5rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; color: white; text-align: center;">
+        <div class="feature-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
             <h4>🔧 Start Predicting</h4>
             <p>Jump straight into tool wear prediction with our trained models</p>
             <div style="margin-top: 1rem; padding: 0.5rem; background-color: rgba(255,255,255,0.2); border-radius: 5px;">
@@ -244,7 +696,7 @@ if page == "🏠 Home":
     
     with start_col2:
         st.markdown("""
-        <div style="padding: 1.5rem; background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 12px; color: white; text-align: center;">
+        <div class="feature-card" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
             <h4>📈 Explore Data</h4>
             <p>Dive deep into sensor data with interactive visualizations</p>
             <div style="margin-top: 1rem; padding: 0.5rem; background-color: rgba(255,255,255,0.2); border-radius: 5px;">
@@ -260,7 +712,7 @@ elif page == "🔧 Worn Tool Prediction":
     experiment_files, train_file = load_available_datasets()
     
     st.markdown("""
-    <div style="background-color: #e3f2fd; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+    <div class="info-section">
         <h4>🎯 Prediction Engine</h4>
         <p>Select from available experiment datasets or training data to predict tool wear status using our trained Random Forest model.</p>
     </div>
@@ -484,7 +936,7 @@ elif page == "📈 Sensor Data Visualizer":
     experiment_files, train_file = load_available_datasets()
     
     st.markdown("""
-    <div style="background-color: #e8f5e8; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+    <div class="success-section">
         <h4>🔍 Interactive Data Exploration</h4>
         <p>Explore sensor data patterns, compare worn vs unworn tools, and identify key insights through interactive visualizations.</p>
     </div>
@@ -731,7 +1183,7 @@ elif page == "📈 Sensor Data Visualizer":
 elif page == "🎓 Train Your Own Model":
     st.markdown('<h1 class="main-header">🎓 Train Your Own Model</h1>', unsafe_allow_html=True)
     st.markdown("""
-    <div style="background-color: #fff3cd; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem; border-left: 5px solid #ffc107;">
+    <div class="warning-section">
         <h4>⚠️ Advanced Feature</h4>
         <p>Upload a new training dataset and automatically train with all 4 algorithms (Random Forest, Decision Tree, SVM, Logistic Regression). All models will be saved and compared.</p>
     </div>
@@ -746,42 +1198,310 @@ elif page == "🎓 Train Your Own Model":
 
         st.markdown("### 👁️ Data Preview")
         st.dataframe(user_df.head(10), use_container_width=True)
+        
+        # Auto-detect label column
+        def detect_label_column(df):
+            """Intelligently detect the most likely label column"""
+            likely_label_names = [
+                'tool_condition', 'label', 'target', 'class', 'condition', 
+                'status', 'category', 'outcome', 'result', 'y', 'wear',
+                'machining_process', 'process', 'state', 'phase'
+            ]
+            
+            # First check for exact matches (case insensitive)
+            for col in df.columns:
+                if col.lower() in likely_label_names:
+                    return col
+            
+            # Check for partial matches (case insensitive)
+            for col in df.columns:
+                for label_name in likely_label_names:
+                    if label_name in col.lower():
+                        return col
+            
+            # Prioritize categorical/string columns with reasonable unique values
+            categorical_candidates = []
+            for col in df.columns:
+                if df[col].dtype == 'object' or df[col].dtype.name == 'category':
+                    unique_count = len(df[col].unique())
+                    if 2 <= unique_count <= 15:  # Reasonable for classification
+                        categorical_candidates.append((col, unique_count, 'categorical'))
+            
+            # If we found categorical candidates, prefer the one with fewer unique values
+            if categorical_candidates:
+                # Sort by number of unique values (fewer is better for classification)
+                categorical_candidates.sort(key=lambda x: x[1])
+                return categorical_candidates[0][0]
+            
+            # Look for integer columns that might be encoded labels (but avoid continuous data)
+            integer_candidates = []
+            for col in df.columns:
+                if df[col].dtype in ['int64', 'int32', 'int8', 'int16']:
+                    unique_values = df[col].unique()
+                    unique_count = len(unique_values)
+                    # Check if it looks like categorical data (small range, reasonable count)
+                    if 2 <= unique_count <= 10 and max(unique_values) - min(unique_values) < 100:
+                        # Additional check: avoid columns that look like continuous sequences
+                        if not (unique_count > 50 and max(unique_values) > 1000):
+                            integer_candidates.append((col, unique_count, 'integer'))
+            
+            # If we found integer candidates, prefer the one with fewer unique values
+            if integer_candidates:
+                integer_candidates.sort(key=lambda x: x[1])
+                return integer_candidates[0][0]
+            
+            # Avoid continuous numeric columns (float with many unique values)
+            avoid_patterns = [
+                'velocity', 'acceleration', 'position', 'current', 'voltage', 
+                'power', 'feedback', 'actual', 'command', 'output', 'sequence_number',
+                'feedrate', 'pressure', 'number', 'id', 'index'
+            ]
+            
+            # Look for any remaining categorical columns, even with more unique values
+            for col in df.columns:
+                if df[col].dtype == 'object':
+                    # Check if column name suggests it's not a label
+                    is_avoid = any(pattern in col.lower() for pattern in avoid_patterns)
+                    if not is_avoid:
+                        return col
+            
+            # As a last resort, find the column with the fewest unique values (but avoid obviously continuous data)
+            best_candidate = None
+            min_unique = float('inf')
+            
+            for col in df.columns:
+                unique_count = len(df[col].unique())
+                # Avoid columns that are clearly continuous
+                is_avoid = any(pattern in col.lower() for pattern in avoid_patterns)
+                is_continuous = (df[col].dtype == 'float64' and unique_count > 100)
+                
+                if not is_avoid and not is_continuous and 2 <= unique_count < min_unique:
+                    min_unique = unique_count
+                    best_candidate = col
+            
+            # If we found a good candidate, return it; otherwise default to last column
+            return best_candidate if best_candidate else df.columns[-1]
+        
+        # Detect and set default label column
+        detected_label = detect_label_column(user_df)
+        
+        # Auto-select feature columns (all numeric except the detected label)
+        def get_suggested_features(df, label_col):
+            """Get suggested feature columns with intelligent filtering"""
+            numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+            
+            # Remove the label column if it's numeric
+            if label_col in numeric_cols:
+                numeric_cols.remove(label_col)
+            
+            # Remove obviously non-feature columns with more sophisticated patterns
+            exclude_patterns = [
+                'id', 'index', 'no', 'number', 'sequence', 'program_number',
+                'timestamp', 'time', 'date', 'row', 'record'
+            ]
+            
+            # Remove columns that are likely identifiers or metadata
+            suggested_features = []
+            for col in numeric_cols:
+                # Check if column name contains exclude patterns
+                is_exclude = any(pattern in col.lower() for pattern in exclude_patterns)
+                
+                # Additional checks for ID-like columns
+                if not is_exclude:
+                    # Check if it's a sequential ID (many consecutive integers)
+                    if df[col].dtype in ['int64', 'int32'] and len(df[col].unique()) > len(df) * 0.8:
+                        # Likely an ID column if most values are unique
+                        is_exclude = True
+                    
+                    # Check if it's a constant or near-constant column
+                    elif len(df[col].unique()) == 1:
+                        # Constant column, not useful for prediction
+                        is_exclude = True
+                
+                if not is_exclude:
+                    suggested_features.append(col)
+            
+            # If we have too many features, prioritize the most relevant ones
+            if len(suggested_features) > 20:
+                # Prioritize columns with moderate variance (not too constant, not too noisy)
+                feature_stats = []
+                for col in suggested_features:
+                    try:
+                        variance = df[col].var()
+                        unique_ratio = len(df[col].unique()) / len(df)
+                        # Prefer moderate variance and reasonable unique ratio
+                        score = variance * (1 - abs(unique_ratio - 0.5))
+                        feature_stats.append((col, score))
+                    except:
+                        feature_stats.append((col, 0))
+                
+                # Sort by score and take top 20
+                feature_stats.sort(key=lambda x: x[1], reverse=True)
+                suggested_features = [col for col, score in feature_stats[:20]]
+            
+            return suggested_features
 
         st.markdown("### 🎯 Configure Training")
+        
+        # Show auto-detection info with better validation
+        detected_label_info = f"🤖 **Auto-detected label column**: `{detected_label}`"
+        unique_values = user_df[detected_label].unique()
+        unique_count = len(unique_values)
+        
+        # Validate the detected label column
+        is_good_label = True
+        warning_message = ""
+        
+        # Check if it's a continuous numeric column with too many unique values
+        if user_df[detected_label].dtype in ['float64', 'float32'] and unique_count > 20:
+            is_good_label = False
+            warning_message = f"⚠️ **Warning**: '{detected_label}' appears to be continuous data with {unique_count} unique values. This is not suitable for classification."
+        
+        # Check if it's an obvious non-label column
+        avoid_patterns = ['velocity', 'acceleration', 'position', 'current', 'voltage', 'power', 'feedback', 'actual', 'command']
+        if any(pattern in detected_label.lower() for pattern in avoid_patterns):
+            is_good_label = False
+            warning_message = f"⚠️ **Warning**: '{detected_label}' appears to be sensor data, not a label column."
+        
+        if is_good_label:
+            st.info(f"{detected_label_info}\n\n"
+                    f"📊 **Unique values in {detected_label}**: {list(unique_values)[:10]}"
+                    f"{'...' if len(unique_values) > 10 else ''}\n\n"
+                    f"✅ **Validation**: This looks like a good label column for classification!")
+        else:
+            st.warning(f"{detected_label_info}\n\n"
+                      f"📊 **Unique values in {detected_label}**: {list(unique_values)[:10]}"
+                      f"{'...' if len(unique_values) > 10 else ''}\n\n"
+                      f"{warning_message}")
+            
+            # Suggest alternatives
+            better_options = []
+            for col in user_df.columns:
+                if col != detected_label:
+                    col_unique_count = len(user_df[col].unique())
+                    if user_df[col].dtype == 'object' and 2 <= col_unique_count <= 15:
+                        better_options.append(f"`{col}` ({col_unique_count} unique values)")
+                    elif user_df[col].dtype in ['int64', 'int32'] and 2 <= col_unique_count <= 10:
+                        better_options.append(f"`{col}` ({col_unique_count} unique values)")
+            
+            if better_options:
+                st.info(f"💡 **Better alternatives found**: {', '.join(better_options[:3])}")
+            else:
+                st.info("💡 **Recommendation**: Check if your data has a categorical column for labels, or consider converting continuous values to discrete classes.")
+        
         col1, col2 = st.columns(2)
         with col1:
-            numeric_cols = user_df.select_dtypes(include=[np.number]).columns.tolist()
+            # Get all numeric columns for feature selection
+            all_numeric_cols = user_df.select_dtypes(include=[np.number]).columns.tolist()
+            suggested_features = get_suggested_features(user_df, detected_label)
+            
             feature_cols = st.multiselect(
                 "Select feature columns:", 
-                numeric_cols,
-                help="Choose the numeric columns that will be used as input features"
+                all_numeric_cols,
+                default=suggested_features,  # Auto-select suggested features
+                help="Choose the numeric columns that will be used as input features. "
+                     "Suggested features are pre-selected based on intelligent detection."
             )
+            
+            if suggested_features:
+                st.success(f"✅ Auto-selected {len(suggested_features)} feature columns")
+            
         with col2:
+            # Find the index of detected label for default selection
+            label_options = list(user_df.columns)
+            default_label_index = label_options.index(detected_label) if detected_label in label_options else 0
+            
             label_col = st.selectbox(
-                "Select label column:", 
+                "Label column (target):", 
                 user_df.columns,
-                help="Choose the column that contains the target labels"
+                index=default_label_index,  # Set detected label as default
+                help="The target column that the model will learn to predict. "
+                     "Auto-detected based on column names and data patterns."
             )
+            
+            # Show label column info
+            if label_col:
+                unique_count = len(user_df[label_col].unique())
+                st.info(f"📋 **{label_col}** has {unique_count} unique values")
+                if unique_count <= 10:
+                    st.write("**Values:**", list(user_df[label_col].unique()))
+        
+        # Show column summary
+        if feature_cols and label_col:
+            st.markdown("### 📋 Training Configuration Summary")
+            summary_col1, summary_col2 = st.columns(2)
+            
+            with summary_col1:
+                st.markdown("**🔧 Feature Columns:**")
+                for i, col in enumerate(feature_cols, 1):
+                    st.write(f"{i}. `{col}` ({user_df[col].dtype})")
+            
+            with summary_col2:
+                st.markdown(f"**🎯 Target Column:** `{label_col}` ({user_df[label_col].dtype})")
+                st.write(f"**Classes:** {len(user_df[label_col].unique())}")
+                if len(user_df[label_col].unique()) <= 10:
+                    for val in user_df[label_col].unique():
+                        count = sum(user_df[label_col] == val)
+                        percentage = (count / len(user_df)) * 100
+                        st.write(f"  • `{val}`: {count} samples ({percentage:.1f}%)")
 
         if feature_cols and label_col:
-            # Add helpful validation before training
+            # Add comprehensive validation before training
+            config_errors = []
+            config_warnings = []
+            
+            # Check for duplicate column selection
             if label_col in feature_cols:
-                st.error("❌ **Configuration Error**: The label column cannot be the same as a feature column!")
-                st.info("💡 **Solution**: Remove the label column from the feature selection, or choose a different label column.")
-            elif user_df[label_col].dtype in ['float64', 'float32'] and len(user_df[label_col].unique()) > 10:
-                st.error(f"❌ **Incorrect Label Selection**: '{label_col}' appears to be a continuous numeric column with {len(user_df[label_col].unique())} unique values.")
-                st.error("🔍 **Issue**: Classification algorithms expect discrete classes (like 'worn'/'unworn'), not continuous values.")
+                config_errors.append("❌ **Configuration Error**: The label column cannot be the same as a feature column!")
+                config_errors.append("💡 **Solution**: Remove the label column from the feature selection, or choose a different label column.")
+            
+            # Check if label column is suitable for classification
+            label_unique_count = len(user_df[label_col].unique())
+            if user_df[label_col].dtype in ['float64', 'float32'] and label_unique_count > 20:
+                config_errors.append(f"❌ **Incorrect Label Selection**: '{label_col}' appears to be a continuous numeric column with {label_unique_count} unique values.")
+                config_errors.append("🔍 **Issue**: Classification algorithms expect discrete classes (like 'worn'/'unworn'), not continuous values.")
                 
-                # Check if tool_condition exists
-                if 'tool_condition' in user_df.columns:
-                    tool_values = user_df['tool_condition'].unique()
-                    st.success(f"💡 **Recommended Solution**: Use '**tool_condition**' as the label column instead. It contains discrete classes: {list(tool_values)}")
+                # Suggest better alternatives
+                alternatives = []
+                for col in user_df.columns:
+                    if col != label_col:
+                        col_unique = len(user_df[col].unique())
+                        if user_df[col].dtype == 'object' and 2 <= col_unique <= 15:
+                            alternatives.append(f"`{col}` ({col_unique} classes)")
+                        elif user_df[col].dtype in ['int64', 'int32'] and 2 <= col_unique <= 10:
+                            alternatives.append(f"`{col}` ({col_unique} classes)")
+                
+                if alternatives:
+                    config_errors.append(f"💡 **Recommended Alternatives**: {', '.join(alternatives[:3])}")
                 else:
-                    st.info("💡 **Possible Solutions**:")
-                    st.write("1. Use a categorical column as the label (like 'tool_condition', 'status', etc.)")
-                    st.write("2. Convert continuous values to discrete classes (e.g., 'low'/'medium'/'high')")
-                    st.write("3. Use regression algorithms instead of classification")
-            else:
+                    config_errors.append("💡 **Possible Solutions**: 1) Use a categorical column, 2) Convert continuous values to discrete classes, 3) Use regression instead")
+            
+            # Check for too few features
+            if len(feature_cols) < 2:
+                config_warnings.append("⚠️ **Warning**: Using fewer than 2 features may result in poor model performance.")
+            
+            # Check for too many features relative to samples
+            if len(feature_cols) > len(user_df) / 5:
+                config_warnings.append(f"⚠️ **Warning**: Using {len(feature_cols)} features with only {len(user_df)} samples may lead to overfitting.")
+            
+            # Check for very imbalanced classes
+            if label_unique_count <= 10:  # Only for reasonable number of classes
+                class_counts = user_df[label_col].value_counts()
+                min_class_ratio = class_counts.min() / class_counts.max()
+                if min_class_ratio < 0.1:  # Less than 10% representation
+                    config_warnings.append(f"⚠️ **Warning**: Highly imbalanced classes detected. Smallest class has only {class_counts.min()} samples.")
+            
+            # Display errors and warnings
+            if config_errors:
+                for error in config_errors:
+                    st.error(error)
+            
+            if config_warnings:
+                for warning in config_warnings:
+                    st.warning(warning)
+            
+            # Show feature statistics if configuration looks good
+            if not config_errors:
                 st.markdown("### 📊 Feature Statistics")
                 st.dataframe(user_df[feature_cols].describe(), use_container_width=True)
 
@@ -978,7 +1698,7 @@ elif page == "🎓 Train Your Own Model":
         
         with benefit_col1:
             st.markdown("""
-            <div style="padding: 1rem; background-color: #e8f5e8; border-radius: 8px; margin: 0.5rem 0;">
+            <div class="dataset-info-card">
                 <h5>🎯 Automatic Training</h5>
                 <ul>
                     <li>4 algorithms trained simultaneously</li>
@@ -990,7 +1710,7 @@ elif page == "🎓 Train Your Own Model":
         
         with benefit_col2:
             st.markdown("""
-            <div style="padding: 1rem; background-color: #e3f2fd; border-radius: 8px; margin: 0.5rem 0;">
+            <div class="dataset-info-card">
                 <h5>📊 Comprehensive Results</h5>
                 <ul>
                     <li>Performance comparison charts</li>
@@ -1005,7 +1725,7 @@ elif page == "📋 Model Evaluation Dashboard":
     st.markdown('<h1 class="main-header">📋 Model Evaluation Dashboard</h1>', unsafe_allow_html=True)
     
     st.markdown("""
-    <div style="background-color: #e3f2fd; padding: 1.5rem; border-radius: 10px; margin-bottom: 2rem;">
+    <div class="info-section">
         <h4>🎯 Model Performance Evaluation</h4>
         <p>Evaluate model performance with comprehensive metrics: accuracy, confusion matrix, precision, recall, F1 score, and ROC curve analysis.</p>
     </div>
@@ -1023,8 +1743,158 @@ elif page == "📋 Model Evaluation Dashboard":
         st.markdown("### 👁️ Test Data Preview")
         st.dataframe(test_df.head(10), use_container_width=True)
         
+        # Auto-detect label column for evaluation
+        def detect_label_column_eval(df):
+            """Intelligently detect the most likely label column for evaluation"""
+            likely_label_names = [
+                'tool_condition', 'label', 'target', 'class', 'condition', 
+                'status', 'category', 'outcome', 'result', 'y', 'wear',
+                'machining_process', 'process', 'state', 'phase', 'actual',
+                'true', 'ground_truth', 'gt'
+            ]
+            
+            # First check for exact matches (case insensitive)
+            for col in df.columns:
+                if col.lower() in likely_label_names:
+                    return col
+            
+            # Check for partial matches (case insensitive)
+            for col in df.columns:
+                for label_name in likely_label_names:
+                    if label_name in col.lower():
+                        return col
+            
+            # Prioritize categorical/string columns with reasonable unique values
+            categorical_candidates = []
+            for col in df.columns:
+                if df[col].dtype == 'object' or df[col].dtype.name == 'category':
+                    unique_count = len(df[col].unique())
+                    if 2 <= unique_count <= 15:  # Reasonable for classification
+                        categorical_candidates.append((col, unique_count, 'categorical'))
+            
+            # If we found categorical candidates, prefer the one with fewer unique values
+            if categorical_candidates:
+                categorical_candidates.sort(key=lambda x: x[1])
+                return categorical_candidates[0][0]
+            
+            # Look for integer columns that might be encoded labels
+            integer_candidates = []
+            for col in df.columns:
+                if df[col].dtype in ['int64', 'int32', 'int8', 'int16']:
+                    unique_values = df[col].unique()
+                    unique_count = len(unique_values)
+                    if 2 <= unique_count <= 10 and max(unique_values) - min(unique_values) < 100:
+                        if not (unique_count > 50 and max(unique_values) > 1000):
+                            integer_candidates.append((col, unique_count, 'integer'))
+            
+            if integer_candidates:
+                integer_candidates.sort(key=lambda x: x[1])
+                return integer_candidates[0][0]
+            
+            # Avoid obvious sensor/measurement columns
+            avoid_patterns = [
+                'velocity', 'acceleration', 'position', 'current', 'voltage', 
+                'power', 'feedback', 'actual', 'command', 'output', 'sequence_number',
+                'feedrate', 'pressure', 'number', 'id', 'index'
+            ]
+            
+            # Find the best remaining candidate
+            best_candidate = None
+            min_unique = float('inf')
+            
+            for col in df.columns:
+                unique_count = len(df[col].unique())
+                is_avoid = any(pattern in col.lower() for pattern in avoid_patterns)
+                is_continuous = (df[col].dtype == 'float64' and unique_count > 100)
+                
+                if not is_avoid and not is_continuous and 2 <= unique_count < min_unique:
+                    min_unique = unique_count
+                    best_candidate = col
+            
+            return best_candidate if best_candidate else df.columns[-1]
+        
+        # Auto-select feature columns for evaluation
+        def get_suggested_eval_features(df, label_col):
+            """Get suggested feature columns for evaluation"""
+            numeric_cols = df.select_dtypes(include=[np.number]).columns.tolist()
+            
+            # Remove the label column if it's numeric
+            if label_col in numeric_cols:
+                numeric_cols.remove(label_col)
+            
+            # Remove obviously non-feature columns
+            exclude_patterns = [
+                'id', 'index', 'no', 'number', 'sequence', 'program_number',
+                'timestamp', 'time', 'date', 'row', 'record'
+            ]
+            
+            suggested_features = []
+            for col in numeric_cols:
+                is_exclude = any(pattern in col.lower() for pattern in exclude_patterns)
+                
+                if not is_exclude:
+                    # Check if it's likely an ID column
+                    if df[col].dtype in ['int64', 'int32'] and len(df[col].unique()) > len(df) * 0.8:
+                        is_exclude = True
+                    elif len(df[col].unique()) == 1:
+                        is_exclude = True
+                
+                if not is_exclude:
+                    suggested_features.append(col)
+            
+            # Limit to reasonable number of features
+            if len(suggested_features) > 20:
+                suggested_features = suggested_features[:20]
+            
+            return suggested_features
+        
+        # Detect label and features
+        detected_label = detect_label_column_eval(test_df)
+        suggested_features = get_suggested_eval_features(test_df, detected_label)
+        
         # Feature and label selection
         st.markdown("### 🎯 Configure Evaluation")
+        
+        # Show auto-detection info
+        unique_values = test_df[detected_label].unique()
+        unique_count = len(unique_values)
+        
+        # Validate the detected label
+        is_good_label = True
+        warning_message = ""
+        
+        if test_df[detected_label].dtype in ['float64', 'float32'] and unique_count > 20:
+            is_good_label = False
+            warning_message = f"⚠️ **Warning**: '{detected_label}' appears to be continuous data with {unique_count} unique values."
+        
+        avoid_patterns = ['velocity', 'acceleration', 'position', 'current', 'voltage', 'power']
+        if any(pattern in detected_label.lower() for pattern in avoid_patterns):
+            is_good_label = False
+            warning_message = f"⚠️ **Warning**: '{detected_label}' appears to be sensor data, not a label column."
+        
+        if is_good_label:
+            st.info(f"🤖 **Auto-detected label column**: `{detected_label}`\n\n"
+                    f"📊 **Unique values**: {list(unique_values)[:10]}"
+                    f"{'...' if len(unique_values) > 10 else ''}\n\n"
+                    f"✅ **Validation**: Good label column for evaluation!")
+        else:
+            st.warning(f"🤖 **Auto-detected label column**: `{detected_label}`\n\n"
+                      f"📊 **Unique values**: {list(unique_values)[:10]}"
+                      f"{'...' if len(unique_values) > 10 else ''}\n\n"
+                      f"{warning_message}")
+            
+            # Suggest better alternatives
+            better_options = []
+            for col in test_df.columns:
+                if col != detected_label:
+                    col_unique_count = len(test_df[col].unique())
+                    if test_df[col].dtype == 'object' and 2 <= col_unique_count <= 15:
+                        better_options.append(f"`{col}` ({col_unique_count} values)")
+                    elif test_df[col].dtype in ['int64', 'int32'] and 2 <= col_unique_count <= 10:
+                        better_options.append(f"`{col}` ({col_unique_count} values)")
+            
+            if better_options:
+                st.info(f"💡 **Better alternatives**: {', '.join(better_options[:3])}")
         
         col1, col2 = st.columns(2)
         
@@ -1033,22 +1903,84 @@ elif page == "📋 Model Evaluation Dashboard":
             numeric_cols = test_df.select_dtypes(include=[np.number]).columns.tolist()
             feature_cols = st.multiselect(
                 "Select feature columns:", 
-                numeric_cols, 
+                numeric_cols,
+                default=suggested_features,  # Auto-select suggested features
                 key="eval_features",
-                help="Choose the same features used during training"
+                help="Choose the same features used during training. Suggested features are pre-selected."
             )
+            
+            if suggested_features:
+                st.success(f"✅ Auto-selected {len(suggested_features)} feature columns")
         
         with col2:
-            # Select label column
+            # Select label column with auto-detection
+            label_options = list(test_df.columns)
+            default_label_index = label_options.index(detected_label) if detected_label in label_options else 0
+            
             label_col = st.selectbox(
-                "Select label column:", 
-                test_df.columns, 
+                "Label column (ground truth):", 
+                test_df.columns,
+                index=default_label_index,
                 key="eval_label",
-                help="Choose the column with true labels"
+                help="Choose the column with true labels for comparison. Auto-detected based on data patterns."
             )
+            
+            # Show label column info
+            if label_col:
+                unique_count = len(test_df[label_col].unique())
+                st.info(f"📋 **{label_col}** has {unique_count} unique values")
+                if unique_count <= 10:
+                    st.write("**Values:**", list(test_df[label_col].unique()))
         
         if feature_cols and label_col:
-            if st.button("📊 Evaluate Model", type="primary"):
+            # Add validation for evaluation configuration
+            eval_errors = []
+            eval_warnings = []
+            
+            # Check for duplicate column selection
+            if label_col in feature_cols:
+                eval_errors.append("❌ **Configuration Error**: The label column cannot be used as a feature!")
+                eval_errors.append("💡 **Solution**: Remove the label column from feature selection.")
+            
+            # Check if label column is suitable for evaluation
+            label_unique_count = len(test_df[label_col].unique())
+            if test_df[label_col].dtype in ['float64', 'float32'] and label_unique_count > 20:
+                eval_errors.append(f"❌ **Inappropriate Label**: '{label_col}' has {label_unique_count} unique values.")
+                eval_errors.append("🔍 **Issue**: Evaluation expects discrete classes, not continuous values.")
+            
+            # Check for too few features
+            if len(feature_cols) < 2:
+                eval_warnings.append("⚠️ **Warning**: Using fewer than 2 features may not match training data.")
+            
+            # Display errors and warnings
+            if eval_errors:
+                for error in eval_errors:
+                    st.error(error)
+            
+            if eval_warnings:
+                for warning in eval_warnings:
+                    st.warning(warning)
+            
+            # Show evaluation configuration summary
+            if not eval_errors:
+                st.markdown("### 📋 Evaluation Configuration Summary")
+                summary_col1, summary_col2 = st.columns(2)
+                
+                with summary_col1:
+                    st.markdown("**🔧 Feature Columns:**")
+                    for i, col in enumerate(feature_cols, 1):
+                        st.write(f"{i}. `{col}` ({test_df[col].dtype})")
+                
+                with summary_col2:
+                    st.markdown(f"**🎯 Label Column:** `{label_col}` ({test_df[label_col].dtype})")
+                    st.write(f"**Classes:** {len(test_df[label_col].unique())}")
+                    if len(test_df[label_col].unique()) <= 10:
+                        for val in test_df[label_col].unique():
+                            count = sum(test_df[label_col] == val)
+                            percentage = (count / len(test_df)) * 100
+                            st.write(f"  • `{val}`: {count} samples ({percentage:.1f}%)")
+
+            if st.button("📊 Evaluate Model", type="primary", disabled=bool(eval_errors)):
                 try:
                     # Load model and make predictions
                     with st.spinner("Loading model and making predictions..."):
@@ -1059,11 +1991,21 @@ elif page == "📋 Model Evaluation Dashboard":
                         # Handle different label formats
                         if y_true.dtype == 'object':
                             # Convert string labels to numeric
-                            label_mapping = {'unworn': 0, 'worn': 1}
+                            unique_labels = y_true.unique()
+                            if len(unique_labels) == 2:
+                                # Binary classification - auto-detect mapping
+                                sorted_labels = sorted(unique_labels)
+                                label_mapping = {sorted_labels[0]: 0, sorted_labels[1]: 1}
+                                st.info(f"🔄 **Label Mapping**: {label_mapping}")
+                            else:
+                                # Multi-class classification
+                                label_mapping = {label: idx for idx, label in enumerate(sorted(unique_labels))}
+                                st.info(f"🔄 **Label Mapping**: {label_mapping}")
+                            
                             y_true_numeric = y_true.map(label_mapping)
                             if y_true_numeric.isnull().any():
-                                st.warning("⚠️ Some labels couldn't be mapped. Using original values.")
-                                y_true_numeric = y_true
+                                st.error("❌ Could not map all labels to numeric values. Please check your data.")
+                                st.stop()
                         else:
                             y_true_numeric = y_true
                         
@@ -1099,15 +2041,22 @@ elif page == "📋 Model Evaluation Dashboard":
                     with col4:
                         st.metric("⚖️ F1 Score", f"{f1:.3f}")
                     
-                    # Confusion Matrix
+                    # Confusion Matrix and Classification Report
                     col1, col2 = st.columns(2)
                     
                     with col1:
                         st.markdown("### 🔄 Confusion Matrix")
+                        
+                        # Create label names for confusion matrix
+                        if y_true.dtype == 'object':
+                            class_names = sorted(y_true.unique())
+                        else:
+                            class_names = [f"Class {i}" for i in sorted(y_true_numeric.unique())]
+                        
                         cm_df = pd.DataFrame(
                             cm,
-                            index=['Actual Unworn', 'Actual Worn'],
-                            columns=['Predicted Unworn', 'Predicted Worn']
+                            index=[f'Actual {name}' for name in class_names],
+                            columns=[f'Predicted {name}' for name in class_names]
                         )
                         st.dataframe(cm_df, use_container_width=True)
                         
@@ -1118,27 +2067,29 @@ elif page == "📋 Model Evaluation Dashboard":
                             aspect="auto",
                             title="Confusion Matrix Heatmap",
                             labels=dict(x="Predicted", y="Actual"),
-                            x=['Unworn', 'Worn'],
-                            y=['Unworn', 'Worn']
+                            x=class_names,
+                            y=class_names,
+                            color_continuous_scale='Blues'
                         )
                         st.plotly_chart(fig_cm, use_container_width=True)
                     
                     with col2:
-                        # Prediction distribution
-                        st.markdown("### 📊 Prediction Distribution")
-                        pred_counts = pd.Series(y_pred).value_counts()
-                        fig_dist = px.pie(
-                            values=pred_counts.values,
-                            names=['Unworn', 'Worn'],
-                            title="Predicted Class Distribution"
-                        )
-                        st.plotly_chart(fig_dist, use_container_width=True)
+                        st.markdown("### 📋 Classification Report")
                         
-                        # Accuracy by class
-                        st.markdown("### 🎯 Class-wise Performance")
-                        class_report = classification_report(y_true_numeric, y_pred, output_dict=True)
-                        class_df = pd.DataFrame(class_report).transpose().round(3)
-                        st.dataframe(class_df, use_container_width=True)
+                        # Generate classification report
+                        if y_true.dtype == 'object':
+                            target_names = sorted(y_true.unique())
+                        else:
+                            target_names = [f"Class {i}" for i in sorted(y_true_numeric.unique())]
+                        
+                        report = classification_report(y_true_numeric, y_pred, 
+                                                     target_names=target_names, 
+                                                     output_dict=True, 
+                                                     zero_division=0)
+                        
+                        # Convert to DataFrame for better display
+                        report_df = pd.DataFrame(report).transpose()
+                        st.dataframe(report_df.round(3), use_container_width=True)
                     
                     # ROC Curve (for binary classification)
                     if len(set(y_true_numeric)) == 2 and y_pred_proba is not None:
@@ -1148,87 +2099,146 @@ elif page == "📋 Model Evaluation Dashboard":
                         fpr, tpr, _ = roc_curve(y_true_numeric, y_pred_proba[:, 1])
                         roc_auc = auc(fpr, tpr)
                         
-                        # Create ROC curve plot
+                        # Plot ROC curve
                         fig_roc = go.Figure()
                         fig_roc.add_trace(go.Scatter(
-                            x=fpr, y=tpr, 
-                            mode='lines', 
+                            x=fpr, y=tpr,
+                            mode='lines',
                             name=f'ROC Curve (AUC = {roc_auc:.3f})',
                             line=dict(color='blue', width=2)
                         ))
                         fig_roc.add_trace(go.Scatter(
-                            x=[0, 1], y=[0, 1], 
-                            mode='lines', 
+                            x=[0, 1], y=[0, 1],
+                            mode='lines',
                             name='Random Classifier',
                             line=dict(color='red', dash='dash')
                         ))
                         fig_roc.update_layout(
-                            title=f"ROC Curve (AUC = {roc_auc:.3f})",
-                            xaxis_title="False Positive Rate",
-                            yaxis_title="True Positive Rate",
-                            xaxis=dict(range=[0, 1]),
-                            yaxis=dict(range=[0, 1])
+                            title='ROC Curve',
+                            xaxis_title='False Positive Rate',
+                            yaxis_title='True Positive Rate',
+                            width=600, height=400
                         )
                         st.plotly_chart(fig_roc, use_container_width=True)
                         
-                        # AUC interpretation
-                        if roc_auc >= 0.9:
-                            st.success(f"🌟 Excellent model performance (AUC = {roc_auc:.3f})")
-                        elif roc_auc >= 0.8:
-                            st.info(f"✅ Good model performance (AUC = {roc_auc:.3f})")
-                        elif roc_auc >= 0.7:
-                            st.warning(f"⚠️ Fair model performance (AUC = {roc_auc:.3f})")
-                        else:
-                            st.error(f"❌ Poor model performance (AUC = {roc_auc:.3f})")
+                        # ROC AUC metric
+                        st.metric("📊 ROC AUC Score", f"{roc_auc:.3f}")
                     
-                    # Model interpretation
-                    st.markdown("### 🔍 Model Insights")
+                    # Prediction vs Actual comparison
+                    st.markdown("### 🔍 Prediction Analysis")
                     
-                    insights_col1, insights_col2 = st.columns(2)
-                    
-                    with insights_col1:
-                        st.markdown("#### ✅ Strengths")
-                        if acc > 0.8:
-                            st.write("• High overall accuracy")
-                        if prec > 0.8:
-                            st.write("• Low false positive rate")
-                        if rec > 0.8:
-                            st.write("• Low false negative rate")
-                        if f1 > 0.8:
-                            st.write("• Balanced precision and recall")
-                    
-                    with insights_col2:
-                        st.markdown("#### ⚠️ Areas for Improvement")
-                        if acc < 0.7:
-                            st.write("• Consider feature engineering")
-                        if prec < 0.7:
-                            st.write("• Reduce false positives")
-                        if rec < 0.7:
-                            st.write("• Reduce false negatives")
-                        if abs(prec - rec) > 0.2:
-                            st.write("• Balance precision and recall")
-                    
-                    # Download results
-                    st.markdown("### 💾 Export Results")
-                    
-                    results_df = test_df.copy()
+                    # Create results dataframe
+                    results_df = test_df[feature_cols + [label_col]].copy()
                     results_df['Predicted'] = y_pred
-                    results_df['Correct'] = (y_true_numeric == y_pred)
                     
-                    csv = results_df.to_csv(index=False)
-                    st.download_button(
-                        label="📥 Download Predictions CSV",
-                        data=csv,
-                        file_name="model_predictions.csv",
-                        mime="text/csv"
-                    )
+                    if y_true.dtype == 'object':
+                        # Map predictions back to original labels
+                        reverse_mapping = {v: k for k, v in label_mapping.items()}
+                        results_df['Predicted_Label'] = [reverse_mapping[pred] for pred in y_pred]
+                        results_df['Correct'] = results_df[label_col] == results_df['Predicted_Label']
+                    else:
+                        results_df['Correct'] = results_df[label_col] == results_df['Predicted']
+                    
+                    # Show sample predictions
+                    st.markdown("#### 📋 Sample Predictions")
+                    sample_size = min(20, len(results_df))
+                    st.dataframe(results_df.head(sample_size), use_container_width=True)
+                    
+                    # Export results option
+                    st.markdown("### 📥 Export Results")
+                    
+                    # Prepare export data
+                    export_data = {
+                        'Model_Accuracy': acc,
+                        'Precision': prec,
+                        'Recall': rec,
+                        'F1_Score': f1,
+                        'Features_Used': ', '.join(feature_cols),
+                        'Label_Column': label_col,
+                        'Test_Samples': len(test_df),
+                        'Correct_Predictions': sum(results_df['Correct']),
+                        'Incorrect_Predictions': sum(~results_df['Correct'])
+                    }
+                    
+                    if len(set(y_true_numeric)) == 2 and y_pred_proba is not None:
+                        export_data['ROC_AUC'] = roc_auc
+                    
+                    # Export summary
+                    export_summary = pd.DataFrame([export_data])
+                    csv_summary = export_summary.to_csv(index=False)
+                    
+                    col1, col2 = st.columns(2)
+                    with col1:
+                        st.download_button(
+                            label="📥 Download Evaluation Summary",
+                            data=csv_summary,
+                            file_name="model_evaluation_summary.csv",
+                            mime="text/csv"
+                        )
+                    
+                    with col2:
+                        # Export detailed predictions
+                        csv_predictions = results_df.to_csv(index=False)
+                        st.download_button(
+                            label="📥 Download Detailed Predictions",
+                            data=csv_predictions,
+                            file_name="detailed_predictions.csv",
+                            mime="text/csv"
+                        )
                     
                 except Exception as e:
-                    st.error(f"❌ Evaluation failed: {str(e)}")
-                    st.info("Please check that:")
-                    st.write("- The features match those used during training")
-                    st.write("- The model file exists and is properly formatted")
-                    st.write("- The test data has the correct format")
+                    st.error(f"❌ Error during evaluation: {str(e)}")
+                    
+                    # Check if the error is due to feature mismatch
+                    if "feature names should match" in str(e).lower() or "feature names unseen" in str(e).lower():
+                        st.error("🔍 **Feature Mismatch Detected!**")
+                        st.markdown("""
+                        **The model was trained on different features than what you selected.**
+                        
+                        **Common Solutions:**
+                        1. **Check your training data** - What features were used originally?
+                        2. **Match feature names** - Ensure test data has the same column names
+                        3. **Use compatible data** - Upload test data with the same structure as training data
+                        """)
+                        
+                        # Show what features the model expects vs what was provided
+                        if "Feature names seen at fit time" in str(e):
+                            st.markdown("#### � Feature Analysis")
+                            error_lines = str(e).split('\n')
+                            for line in error_lines:
+                                if 'Feature names seen at fit time' in line or 'Feature names unseen at fit time' in line:
+                                    st.write(f"**{line.strip()}**")
+                                elif line.strip().startswith('- '):
+                                    st.write(line.strip())
+                        
+                        st.info("""
+                        💡 **Recommended Solution**: Upload train.csv for evaluation (has `feedrate`, `clamp_pressure`), 
+                        or train a new model with experiment data features in "Train Your Own Model" section.
+                        
+                        **Why This Happens**: The default model expects `feedrate` and `clamp_pressure` but your 
+                        experiment data has different sensor features like `X1_ActualAcceleration`, etc.
+                        """)
+                    
+                    # Provide debugging help
+                    with st.expander("🔧 Debugging Information"):
+                        st.write("**Selected Features:**", feature_cols)
+                        st.write("**Label Column:**", label_col)
+                        st.write("**Feature Data Types:**")
+                        st.write(test_df[feature_cols].dtypes)
+                        st.write("**Label Data Type:**", test_df[label_col].dtype)
+                        st.write("**Sample Data:**")
+                        st.write(test_df[feature_cols + [label_col]].head())
+                        st.write("**Full Error:**")
+                        st.code(str(e))
+                    
+                    # ROC Curve (for binary classification)
+                    if len(set(y_true_numeric)) == 2 and y_pred_proba is not None:
+                        st.markdown("### 📈 ROC Curve Analysis")
+                        
+                        # Calculate ROC curve
+                        fpr, tpr, _ = roc_curve(y_true_numeric, y_pred_proba[:, 1])
+                        roc_auc = auc(fpr, tpr)
+                        
     
     else:
         # Show example data format
@@ -1251,3 +2261,32 @@ elif page == "📋 Model Evaluation Dashboard":
         2. Upload test data with the same features as training data
         3. Include true labels for comparison
         """)
+
+        # Benefits section
+        st.markdown("### ✨ What You'll Get")
+        
+        benefit_col1, benefit_col2 = st.columns(2)
+        
+        with benefit_col1:
+            st.markdown("""
+            <div class="dataset-info-card">
+                <h5>📊 Comprehensive Metrics</h5>
+                <ul>
+                    <li>Accuracy, Precision, Recall, F1-Score</li>
+                    <li>Confusion Matrix Analysis</li>
+                    <li>ROC Curve for Binary Classification</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
+        
+        with benefit_col2:
+            st.markdown("""
+            <div class="dataset-info-card">
+                <h5>📈 Advanced Analysis</h5>
+                <ul>
+                    <li>Classification Report</li>
+                    <li>Model Performance Insights</li>
+                    <li>Exportable Results</li>
+                </ul>
+            </div>
+            """, unsafe_allow_html=True)
