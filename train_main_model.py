@@ -18,7 +18,7 @@ def main():
     print("🚀 Training model with new name: random_forest_model_main.pkl")
     
     # Load training data
-    train_data_path = 'data/train.csv'
+    train_data_path = 'data/train2.csv'
     if not os.path.exists(train_data_path):
         print(f"❌ Training data not found at {train_data_path}")
         return
